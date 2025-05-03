@@ -1,24 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Crop Detection System</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>Crop Recommendation Tool</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+    body {
+      font-family: Poppins;
+      background: #f4f4f4;
+      padding: 30px;
+    }
+    html{
+        font-family: Poppins;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .container {
+      max-width: 500px;
+      background: #fff;
+      padding: 20px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #28a745;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    #resultContainer {
+      margin-top: 20px;
+      background: #e9f7ef;
+      padding: 15px;
+      border-left: 5px solid #28a745;
+      border-radius: 4px;
+    }
+  </style>
 </head>
 <body>
-  <div class="app-container">
-    <h1>Crop Detection System</h1>
 
-    <input type="text" id="place" placeholder="Enter Place Name" required />
-    <input type="text" id="soil" placeholder="Enter Soil Type" required />
-    <input type="text" id="weather" placeholder="Enter Weather Conditions" required />
+  <div class="container">
+    <h2>Crop Recommendation Tool</h2>
+
+    <label for="place">Place:</label>
+    <input type="text" id="place" placeholder="Enter your location">
+
+    <label for="soil">Soil Type:</label>
+    <input type="text" id="soil" placeholder="e.g. Loamy, Black, Sandy, etc.">
+
+    <label for="season">Season:</label>
+    <select id="season">
+      <option value="">Select a season</option>
+      <option value="kharif">Kharif</option>
+      <option value="rabi">Rabi</option>
+      <option value="summer">Summer</option>
+      <option value="winter">Winter</option>
+    </select>
 
     <button onclick="detectCrop()">Detect Crop</button>
 
     <div id="resultContainer"></div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    function detectCrop() {
+      const place = document.getElementById('place').value.trim();
+      const soil = document.getElementById('soil').value.trim().toLowerCase();
+      const season = document.getElementById('season').value.trim().toLowerCase();
+      const resultContainer = document.getElementById('resultContainer');
+
+      if (!place || !soil || !season) {
+        resultContainer.innerHTML = "Please fill in all the fields.";
+        return;
+      }
+
+      const cropRules = [
+        { soil: "loamy", season: "rabi", crop: "Wheat" },
+        { soil: "clay", season: "kharif", crop: "Rice" },
+        { soil: "black", season: "summer", crop: "Cotton" },
+        { soil: "sandy", season: "summer", crop: "Groundnut" },
+        { soil: "red", season: "kharif", crop: "Millets" },
+        { soil: "alluvial", season: "kharif", crop: "Sugarcane" },
+        { soil: "laterite", season: "rabi", crop: "Tea" },
+        { soil: "peaty", season: "winter", crop: "Potato" }
+      ];
+
+      let crop = "Maize"; // Default crop
+
+      for (const rule of cropRules) {
+        if (soil.includes(rule.soil) && season.includes(rule.season)) {
+          crop = rule.crop;
+          break;
+        }
+      }
+
+      resultContainer.innerHTML = `
+        <p><strong>Place:</strong> ${place}</p>
+        <p><strong>Soil Type:</strong> ${soil}</p>
+        <p><strong>Season:</strong> ${season}</p>
+        <p><strong>Recommended Crop:</strong> ${crop}</p>
+      `;
+    }
+  </script>
+
 </body>
 </html>
